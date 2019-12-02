@@ -17,6 +17,16 @@
   color: white;
 }
 
-.App-link {
-  color: #09d3ac;
+.Content {
+  padding: 20px;
+  background-color: black;
+  color: whitesmoke;
+  border-radius: 50%;
+  opacity: .4;
+}
+
+.Content:hover {
+  color: white;
+  cursor: pointer;
+  opacity: .6;
 }
