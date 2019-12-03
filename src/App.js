@@ -13,9 +13,168 @@ function getGreeting(user) {
   return <h1>Hello, stranger</h1>
 }
 
+function UserGreeting(props) {
+  return <h1>Welcome back</h1>
+}
+
+function GuestGreeting(props) {
+  return <h1>Enter, please</h1>
+}
+
+function Greeting(props) {
+  const isLoggedIn = props.isLoggedIn;
+  if (isLoggedIn) {
+    return <UserGreeting />
+  }
+  return <GuestGreeting />
+}
+
+function LoginButton(props) {
+  return (
+      <button onClick={props.onClick}>
+        Login
+      </button>
+  );
+}
+
+function LogoutButton(props) {
+  return (
+      <button onClick={props.onClick}>
+        Logout
+      </button>
+  );
+}
+
+function Mailbox(props) {
+  const unreadMessages = props.unreadMessages;
+  return (
+      <div>
+        <h1>Здравствуйте!</h1>
+        {unreadMessages.length > 0 &&
+        <h2>
+          У вас {unreadMessages.length} непрочитанных сообщений.
+        </h2>
+        }
+      </div>
+  );
+}
+
+const messages = ['React', 'Re: React', 'Re:Re: React'];
+
+
+
 const user1 = {
   firstName: "firstName",
   lastName: "lastName"
+}
+
+function WarningBanner(props) {
+  if (!props.warn) {
+    return null;
+  }
+
+  return (
+      <div className="warning">
+        Предупреждение!
+      </div>
+  );
+}
+
+class Page extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {showWarning: true};
+    this.handleToggleClick = this.handleToggleClick.bind(this);
+  }
+
+  handleToggleClick() {
+    this.setState(state => ({
+      showWarning: !state.showWarning
+    }));
+  }
+
+  render() {
+    return (
+        <div>
+          <WarningBanner warn={this.state.showWarning} />
+          <button onClick={this.handleToggleClick}>
+            {this.state.showWarning ? 'Спрятать' : 'Показать'}
+          </button>
+        </div>
+    );
+  }
+}
+
+class Toggle extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {isToggleOn: true};
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState(state => ({
+      isToggleOn: !state.isToggleOn
+    }));
+  }
+
+  render() {
+    return (
+        <button onClick={this.handleClick}>
+          {this.state.isToggleOn ? 'On' : 'Off'}
+        </button>
+    );
+  }
+}
+
+class LoggingButton extends React.Component {
+  handleClick() {
+    console.log('value this:', this);
+  }
+
+  render() {
+    return (
+        <button onClick={(e) => this.handleClick(e)}>
+          Press me
+        </button>
+    );
+  }
+}
+
+class LoginControl extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.handleLogoutClick = this.handleLogoutClick.bind(this);
+    this.state = {isLoggedIn: false};
+  }
+
+  handleLoginClick() {
+    this.setState({isLoggedIn: true});
+  }
+
+  handleLogoutClick() {
+    this.setState({isLoggedIn: false});
+  }
+
+  render() {
+    const isLoggedIn = this.state.isLoggedIn;
+    let button;
+
+    if (isLoggedIn) {
+      button = <LogoutButton onClick={this.handleLogoutClick} />;
+    } else {
+      button = <LoginButton onClick={this.handleLoginClick} />;
+    }
+
+    return (
+        <div>
+          <Greeting isLoggedIn={isLoggedIn} />
+          {button}
+        </div>
+    );
+  }
 }
 
 class Clock extends React.Component {
@@ -51,19 +210,45 @@ class Clock extends React.Component {
   }
 }
 
+function ActionLink() {
+  function handleClick(e) {
+    e.preventDefault();
+    console.log('По ссылке кликнули.');
+  }
+
+  return (
+      <a href="#" onClick={handleClick}>
+        Нажми на меня
+      </a>
+  );
+}
+
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <div className="Content"> Content </div>
 
+        <img src={logo} className="App-logo" alt="logo" />
+
+        {ActionLink()}
+
         {getGreeting(user1)}
 
-        <img src={logo} className="App-logo" alt="logo" />
+        <Toggle />
+
+        <LoggingButton />
+
+        <Greeting isLoggedIn={false} />
+
+        <LoginControl />
+
+        <Mailbox unreadMessages={messages} />
+
+        <Page />
 
         <Clock />
       </header>
-      <Clock />
     </div>
   );
 }
