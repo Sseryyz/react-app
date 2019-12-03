@@ -14,19 +14,42 @@ function getGreeting(user) {
 }
 
 const user1 = {
-  firstName: "Mar'ia",
-  lastName: "Morevna"
-};
+  firstName: "firstName",
+  lastName: "lastName"
+}
 
-const user2 = {
-  firstName: "Vaslisa",
-  lastName: "Maeva"
-};
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {date: new Date()};
+  }
 
-const date = (<div>
-  <h1>Heil, mir!</h1>
-  <h2>It is {new Date().toLocaleTimeString()}.</h2>
-</div>);
+  componentDidMount() {
+    this.timerID = setInterval(
+        () => this.tick(),
+        1000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+        <div>
+          <h1>Hi, world</h1>
+          <h2>Now is {this.state.date.toLocaleString()}.</h2>
+        </div>
+    )
+  }
+}
 
 function App() {
   return (
@@ -36,11 +59,11 @@ function App() {
 
         {getGreeting(user1)}
 
-        {date}
-
         <img src={logo} className="App-logo" alt="logo" />
 
+        <Clock />
       </header>
+      <Clock />
     </div>
   );
 }

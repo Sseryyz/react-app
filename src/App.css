@@ -3,7 +3,12 @@
 }
 
 .App-logo {
+  opacity: .5;
   height: 40vmin;
+}
+
+.App-logo:hover {
+  opacity: 1;
 }
 
 .App-header {
