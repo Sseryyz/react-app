@@ -17,6 +17,36 @@ const user1 = {
 //   </li>
 // );
 
+const posts = [
+  {id: 1, title: 'Привет, мир', content: 'Добро пожаловать в документацию React!'},
+  {id: 2, title: 'Установка', content: 'React можно установить из npm.'}
+];
+
+function Blog(props) {
+  const sidebar = (
+      <ul>
+        {props.posts.map((post) =>
+            <li key={post.id}>
+              {post.title}
+            </li>
+        )}
+      </ul>
+  );
+  const content = props.posts.map((post) =>
+      <div key={post.id}>
+        <h3>{post.title}</h3>
+        <p>{post.content}</p>
+      </div>
+  );
+  return (
+      <div>
+        {sidebar}
+        <hr />
+        {content}
+      </div>
+  );
+}
+
 function formatName(user) {
   return user.firstName + ' ' + user.lastName;
 }
@@ -76,15 +106,14 @@ function Mailbox(props) {
 
 function NumberList(props) {
   const numbers = props.numbers;
-  const listItems = numbers.map((number) =>
-      <li key={number.toString()}>
-        {number}
-      </li>
-  );
   return (
-      <ul>{listItems}</ul>
+      <ul>
+        {numbers.map((number) =>
+            <ListItem key={number.toString()}
+                      value={number} />
+        )}
+      </ul>
   );
-
 }
 
 function ListItem(props) {
@@ -254,6 +283,8 @@ function App() {
         <div className="Content"> Content </div>
 
         <img src={logo} className="App-logo" alt="logo" />
+
+        <Blog posts={posts} />
 
         <NumberList numbers={numbers} />
 
