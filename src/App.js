@@ -2,6 +2,21 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+const messages = ['React', 'Re: React', 'Re:Re: React'];
+
+const numbers = [1, 2, 3, 4, 5];
+
+const user1 = {
+  firstName: "firstName",
+  lastName: "lastName"
+}
+
+// const todoItems = todos.map((todo) =>
+//   <li key={todo.id}>
+//     {todo.text}
+//   </li>
+// );
+
 function formatName(user) {
   return user.firstName + ' ' + user.lastName;
 }
@@ -59,13 +74,22 @@ function Mailbox(props) {
   );
 }
 
-const messages = ['React', 'Re: React', 'Re:Re: React'];
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+      <li key={number.toString()}>
+        {number}
+      </li>
+  );
+  return (
+      <ul>{listItems}</ul>
+  );
 
+}
 
-
-const user1 = {
-  firstName: "firstName",
-  lastName: "lastName"
+function ListItem(props) {
+  const value = props.value;
+  return <li>{props.value}</li>;
 }
 
 function WarningBanner(props) {
@@ -77,6 +101,19 @@ function WarningBanner(props) {
       <div className="warning">
         Предупреждение!
       </div>
+  );
+}
+
+function ActionLink() {
+  function handleClick(e) {
+    e.preventDefault();
+    console.log('По ссылке кликнули.');
+  }
+
+  return (
+      <a href="#" onClick={handleClick}>
+        Нажми на меня
+      </a>
   );
 }
 
@@ -210,19 +247,6 @@ class Clock extends React.Component {
   }
 }
 
-function ActionLink() {
-  function handleClick(e) {
-    e.preventDefault();
-    console.log('По ссылке кликнули.');
-  }
-
-  return (
-      <a href="#" onClick={handleClick}>
-        Нажми на меня
-      </a>
-  );
-}
-
 function App() {
   return (
     <div className="App">
@@ -230,6 +254,8 @@ function App() {
         <div className="Content"> Content </div>
 
         <img src={logo} className="App-logo" alt="logo" />
+
+        <NumberList numbers={numbers} />
 
         {ActionLink()}
 
