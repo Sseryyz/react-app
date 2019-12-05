@@ -2,278 +2,245 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const messages = ['React', 'Re: React', 'Re:Re: React'];
+const scaleNames = {
+  c: 'Цельсия',
+  f: 'Фаренгейта'
+};
 
-const numbers = [1, 2, 3, 4, 5];
-
-const user1 = {
-  firstName: "firstName",
-  lastName: "lastName"
-}
-
-// const todoItems = todos.map((todo) =>
-//   <li key={todo.id}>
-//     {todo.text}
-//   </li>
-// );
-
-const posts = [
-  {id: 1, title: 'Привет, мир', content: 'Добро пожаловать в документацию React!'},
-  {id: 2, title: 'Установка', content: 'React можно установить из npm.'}
-];
-
-function Blog(props) {
-  const sidebar = (
-      <ul>
-        {props.posts.map((post) =>
-            <li key={post.id}>
-              {post.title}
-            </li>
-        )}
-      </ul>
-  );
-  const content = props.posts.map((post) =>
-      <div key={post.id}>
-        <h3>{post.title}</h3>
-        <p>{post.content}</p>
-      </div>
-  );
-  return (
-      <div>
-        {sidebar}
-        <hr />
-        {content}
-      </div>
-  );
-}
-
-function formatName(user) {
-  return user.firstName + ' ' + user.lastName;
-}
-
-function getGreeting(user) {
-  if (user) {
-    return <h1>Hello, {formatName(user)}!</h1>
-  }
-  return <h1>Hello, stranger</h1>
-}
-
-function UserGreeting(props) {
-  return <h1>Welcome back</h1>
-}
-
-function GuestGreeting(props) {
-  return <h1>Enter, please</h1>
-}
-
-function Greeting(props) {
-  const isLoggedIn = props.isLoggedIn;
-  if (isLoggedIn) {
-    return <UserGreeting />
-  }
-  return <GuestGreeting />
-}
-
-function LoginButton(props) {
-  return (
-      <button onClick={props.onClick}>
-        Login
-      </button>
-  );
-}
-
-function LogoutButton(props) {
-  return (
-      <button onClick={props.onClick}>
-        Logout
-      </button>
-  );
-}
-
-function Mailbox(props) {
-  const unreadMessages = props.unreadMessages;
-  return (
-      <div>
-        <h1>Здравствуйте!</h1>
-        {unreadMessages.length > 0 &&
-        <h2>
-          У вас {unreadMessages.length} непрочитанных сообщений.
-        </h2>
-        }
-      </div>
-  );
-}
-
-function NumberList(props) {
-  const numbers = props.numbers;
-  return (
-      <ul>
-        {numbers.map((number) =>
-            <ListItem key={number.toString()}
-                      value={number} />
-        )}
-      </ul>
-  );
-}
-
-function ListItem(props) {
-  const value = props.value;
-  return <li>{props.value}</li>;
-}
-
-function WarningBanner(props) {
-  if (!props.warn) {
-    return null;
-  }
-
-  return (
-      <div className="warning">
-        Предупреждение!
-      </div>
-  );
-}
-
-function ActionLink() {
-  function handleClick(e) {
-    e.preventDefault();
-    console.log('По ссылке кликнули.');
-  }
-
-  return (
-      <a href="#" onClick={handleClick}>
-        Нажми на меня
-      </a>
-  );
-}
-
-class Page extends React.Component {
+class TemperatureInput extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {showWarning: true};
-    this.handleToggleClick = this.handleToggleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleToggleClick() {
-    this.setState(state => ({
-      showWarning: !state.showWarning
-    }));
+  handleChange(e) {
+    this.props.onTemperatureChange(e.target.value);
+  }
+
+  render() {
+    const temperature = this.props.temperature;
+    const scale = this.props.scale;
+    return (
+        <fieldset>
+          <legend>Введите градусы по шкале {scaleNames[scale]}:</legend>
+          <input value={temperature}
+                 onChange={this.handleChange} />
+        </fieldset>
+    );
+  }
+}
+
+class NameForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value.toUpperCase()});
+  }
+
+  handleSubmit(event) {
+    console.log('Submited name: ' + this.state.value);
+    event.preventDefault();
   }
 
   render() {
     return (
-        <div>
-          <WarningBanner warn={this.state.showWarning} />
-          <button onClick={this.handleToggleClick}>
-            {this.state.showWarning ? 'Спрятать' : 'Показать'}
-          </button>
-        </div>
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={this.state.value}
+                 onChange={this.handleChange} />
+        </label>
+        <input type="Submit" value="Send" />
+      </form>
     );
   }
 }
 
-class Toggle extends React.Component {
+class EssayForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {isToggleOn: true};
+    this.state = {
+      value: 'Будьте любезны, напишите сочинение о вашем любимом DOM-элементе.'
+    };
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleClick() {
-    this.setState(state => ({
-      isToggleOn: !state.isToggleOn
-    }));
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    console.log('Сочинение отправлено: ' + this.state.value);
+    event.preventDefault();
   }
 
   render() {
     return (
-        <button onClick={this.handleClick}>
-          {this.state.isToggleOn ? 'On' : 'Off'}
-        </button>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Сочинение:
+            <textarea value={this.state.value} onChange={this.handleChange} />
+          </label>
+          <input type="submit" value="Отправить" />
+        </form>
     );
   }
 }
 
-class LoggingButton extends React.Component {
-  handleClick() {
-    console.log('value this:', this);
+class FlavorForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: 'coconut'};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('Ваш любимый вкус: ' + this.state.value);
+    event.preventDefault();
   }
 
   render() {
     return (
-        <button onClick={(e) => this.handleClick(e)}>
-          Press me
-        </button>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Выберите ваш любимый вкус:
+            <select value={this.state.value} onChange={this.handleChange}>
+              <option value="grapefruit">Грейпфрут</option>
+              <option value="lime">Лайм</option>
+              <option value="coconut">Кокос</option>
+              <option value="mango">Манго</option>
+            </select>
+          </label>
+          <input type="submit" value="Отправить" />
+        </form>
     );
   }
 }
 
-class LoginControl extends React.Component {
+class Reservation extends React.Component {
   constructor(props) {
     super(props);
-    this.handleLoginClick = this.handleLoginClick.bind(this);
-    this.handleLogoutClick = this.handleLogoutClick.bind(this);
-    this.state = {isLoggedIn: false};
+    this.state = {
+      isGoing: true,
+      numberOfGuest: 2
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  handleLoginClick() {
-    this.setState({isLoggedIn: true});
-  }
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
 
-  handleLogoutClick() {
-    this.setState({isLoggedIn: false});
-  }
-
-  render() {
-    const isLoggedIn = this.state.isLoggedIn;
-    let button;
-
-    if (isLoggedIn) {
-      button = <LogoutButton onClick={this.handleLogoutClick} />;
-    } else {
-      button = <LoginButton onClick={this.handleLoginClick} />;
-    }
-
-    return (
-        <div>
-          <Greeting isLoggedIn={isLoggedIn} />
-          {button}
-        </div>
-    );
-  }
-}
-
-class Clock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {date: new Date()};
-  }
-
-  componentDidMount() {
-    this.timerID = setInterval(
-        () => this.tick(),
-        1000
-    );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  tick() {
     this.setState({
-      date: new Date()
+      [name]: value
     });
   }
 
   render() {
     return (
-        <div>
-          <h1>Hi, world</h1>
-          <h2>Now is {this.state.date.toLocaleString()}.</h2>
-        </div>
-    )
+        <form>
+          <label>
+            Пойду:
+            <input
+                name="isGoing"
+                type="checkbox"
+                checked={this.state.isGoing}
+                onChange={this.handleInputChange} />
+          </label>
+          <br />
+          <label>
+            Количество гостей:
+            <input
+                name="numberOfGuests"
+                type="number"
+                value={this.state.numberOfGuests}
+                onChange={this.handleInputChange} />
+          </label>
+        </form>
+    );
   }
+}
+
+class Calculator extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+    this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this);
+    this.state = {temperature: '', scale: 'c'};
+  }
+
+  handleCelsiusChange(temperature) {
+    this.setState({scale: 'c', temperature});
+  }
+
+  handleFahrenheitChange(temperature) {
+    this.setState({scale: 'f', temperature});
+  }
+
+  render() {
+    const scale = this.state.scale;
+    const temperature = this.state.temperature;
+    const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+    const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
+
+    return (
+        <div>
+          <TemperatureInput
+              scale="c"
+              temperature={celsius}
+              onTemperatureChange={this.handleCelsiusChange} />
+
+          <TemperatureInput
+              scale="f"
+              temperature={fahrenheit}
+              onTemperatureChange={this.handleFahrenheitChange} />
+
+          <BoilingVerdict
+              celsius={parseFloat(celsius)} />
+        </div>
+    );
+  }
+}
+
+function BoilingVerdict(props) {
+  if (props.celsius >= 100) {
+    return <p>Вода закипит.</p>;
+  }
+  return <p>Вода не закипит.</p>
+}
+
+function toCelsius(fahrenheit) {
+  return (fahrenheit - 32) * 5 / 9;
+}
+
+function toFahrenheit(celsius) {
+  return (celsius * 9 / 5) + 32;
+}
+
+function tryConvert(temperature, convert) {
+  const input = parseFloat(temperature);
+  if (Number.isNaN(input)) {
+    return '';
+  }
+  const output = convert(input);
+  const rounded = Math.round(output * 1000) / 1000;
+  return rounded.toString();
 }
 
 function App() {
@@ -284,27 +251,17 @@ function App() {
 
         <img src={logo} className="App-logo" alt="logo" />
 
-        <Blog posts={posts} />
-
-        <NumberList numbers={numbers} />
-
-        {ActionLink()}
-
-        {getGreeting(user1)}
-
-        <Toggle />
-
-        <LoggingButton />
-
-        <Greeting isLoggedIn={false} />
-
-        <LoginControl />
-
-        <Mailbox unreadMessages={messages} />
-
-        <Page />
-
-        <Clock />
+        <NameForm />
+        <br/>
+        <EssayForm />
+        <br/>
+        <FlavorForm />
+        <br/>
+        <Reservation />
+        <br/>
+        <Calculator />
+        <br/>
+        <input type="file" />
       </header>
     </div>
   );
